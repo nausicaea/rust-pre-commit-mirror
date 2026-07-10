@@ -1,0 +1,31 @@
+- id: nextest-run
+  name: nextest-run
+  description: Run test cases with nextest
+  entry: cargo nextest run
+  language: rust
+  additional_dependencies:
+    - "cli:cargo-nextest:0.9.140"
+  types: [rust]
+  pass_filenames: false
+# - id: fmt
+#   name: fmt
+#   description: Format files with cargo fmt.
+#   entry: cargo fmt
+#   language: system
+#   types: [rust]
+#   args: ["--"]
+# - id: cargo-check
+#   name: cargo check
+#   description: Check the package for errors.
+#   entry: cargo check
+#   language: system
+#   types: [rust]
+#   pass_filenames: false
+# - id: clippy
+#   name: clippy
+#   description: Lint rust sources
+#   entry: cargo clippy
+#   language: system
+#   args: ["--", "-D", "warnings"]
+#   types: [rust]
+#   pass_filenames: false
