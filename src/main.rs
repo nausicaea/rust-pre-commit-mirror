@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    // DUMMY BINARY FOR pre-commit
 }
