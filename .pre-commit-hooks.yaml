@@ -8,25 +8,24 @@
 #     - "cli:cargo-nextest:0.9.140"
 #   types: [rust]
 #   pass_filenames: false
-- id: rustfmt
-  name: rustfmt
-  description: Format files with rustfmt.
+- id: cargo-fmt
+  name: cargo-fmt
+  description: Format files with cargo-fmt.
   entry: cargo fmt
   language: rust
   types: [rust]
   args: ["--"]
-# - id: cargo-check
-#   name: cargo check
-#   description: Check the package for errors.
-#   entry: cargo check
-#   language: system
-#   types: [rust]
-#   pass_filenames: false
-# - id: clippy
-#   name: clippy
-#   description: Lint rust sources
-#   entry: cargo clippy
-#   language: system
-#   args: ["--", "-D", "warnings"]
-#   types: [rust]
-#   pass_filenames: false
+- id: cargo-check
+  name: cargo check
+  description: Check the package for errors.
+  entry: cargo check
+  language: rust
+  types: [rust]
+  pass_filenames: false
+- id: clippy
+  name: clippy
+  description: Lint rust sources using cargo-clippy.
+  entry: cargo clippy
+  language: rust
+  types: [rust]
+  pass_filenames: false
