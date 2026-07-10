@@ -10,7 +10,7 @@
 #   pass_filenames: false
 
 - id: cargo-fmt
-  name: cargo-fmt
+  name: cargo fmt
   description: Format files with cargo-fmt.
   entry: cargo fmt
   language: rust
@@ -42,7 +42,7 @@
   pass_filenames: false
 
 - id: clippy-fix
-  name: clippy-fix
+  name: clippy --fix --allow-dirty
   description: Lint rust sources using cargo-clippy and apply fixes.
   entry: cargo clippy
   language: rust
@@ -53,7 +53,7 @@
   stages: [manual]
 
 - id: cargo-fix
-  name: cargo-fix
+  name: cargo fix --allow-staged
   description: Check the crate for errors and apply fixes.
   entry: cargo fix
   language: rust
