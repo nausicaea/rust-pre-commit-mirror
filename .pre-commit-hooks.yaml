@@ -1,19 +1,20 @@
-- id: nextest-run
-  name: nextest-run
-  description: Run test cases with nextest
-  entry: cargo nextest run
-  language: rust
-  additional_dependencies:
-    - "cli:cargo-nextest:0.9.140"
-  types: [rust]
-  pass_filenames: false
-# - id: fmt
-#   name: fmt
-#   description: Format files with cargo fmt.
-#   entry: cargo fmt
-#   language: system
+# FIXME: won't work yet, because nextest requires --locked
+# - id: nextest-run
+#   name: nextest-run
+#   description: Run test cases with nextest
+#   entry: cargo nextest run
+#   language: rust
+#   additional_dependencies:
+#     - "cli:cargo-nextest:0.9.140"
 #   types: [rust]
-#   args: ["--"]
+#   pass_filenames: false
+- id: rustfmt
+  name: rustfmt
+  description: Format files with rustfmt.
+  entry: cargo fmt
+  language: rust
+  types: [rust]
+  args: ["--"]
 # - id: cargo-check
 #   name: cargo check
 #   description: Check the package for errors.
