@@ -61,6 +61,30 @@
   types: [rust]
   pass_filenames: false
 
+- id: audit
+  name: audit
+  description: Run public vulnerability auditing with cargo-audit
+  stages:
+    - pre-push
+  entry: cargo audit
+  language: rust
+  additional_dependencies:
+    - "cli:cargo-audit:0.22.2"
+  types: [rust]
+  pass_filenames: false
+
+- id: tarpaulin
+  name: tarpaulin
+  description: Run code coverage analysis with cargo-tarpaulin
+  stages:
+    - pre-push
+  entry: cargo tarpaulin
+  language: rust
+  additional_dependencies:
+    - "cli:cargo-tarpaulin:0.37.0"
+  types: [rust]
+  pass_filenames: false
+
 - id: cargo-fmt
   name: cargo fmt
   description: Format files with cargo-fmt.
