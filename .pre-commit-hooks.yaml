@@ -1,14 +1,3 @@
-# FIXME: won't work yet, because nextest requires --locked
-# - id: nextest-run
-#   name: nextest-run
-#   description: Run test cases with nextest
-#   entry: cargo nextest run
-#   language: rust
-#   additional_dependencies:
-#     - "cli:cargo-nextest:0.9.140"
-#   types: [rust]
-#   pass_filenames: false
-
 - id: cargo-fmt-check
   name: cargo fmt --check
   description: Verify formatting with cargo-fmt.
@@ -46,6 +35,29 @@
     - pre-push
   entry: cargo clippy
   language: rust
+  types: [rust]
+  pass_filenames: false
+
+# FIXME: nextest won't work yet, because it requires --locked
+# - id: nextest-run
+#   name: nextest-run
+#   description: Run test cases with nextest
+#   entry: cargo nextest run
+#   language: rust
+#   additional_dependencies:
+#     - "cli:cargo-nextest:0.9.140"
+#   types: [rust]
+#   pass_filenames: false
+
+- id: mutants
+  name: mutants
+  description: Run mutation testing on the crate with cargo-mutants
+  stages:
+    - pre-push
+  entry: cargo mutants
+  language: rust
+  additional_dependencies:
+    - "cli:cargo-mutants:27.1.0"
   types: [rust]
   pass_filenames: false
 
