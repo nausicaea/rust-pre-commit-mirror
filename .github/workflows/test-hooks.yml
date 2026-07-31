@@ -1,0 +1,65 @@
+name: Test Pre-Commit Hooks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-hooks:
+    name: Test ${{ matrix.hook.id }} (${{ matrix.hook.stage }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        hook:
+          - { id: cargo-fmt,        stage: pre-commit }
+          - { id: clippy-fix,       stage: pre-commit }
+          - { id: cargo-fix,        stage: pre-commit }
+          - { id: cargo-fmt-check,  stage: pre-push   }
+          - { id: cargo-check,      stage: pre-push   }
+          - { id: cargo-test,       stage: pre-push   }
+          - { id: clippy,           stage: pre-push   }
+          - { id: mutants,          stage: pre-push   }
+          - { id: audit,            stage: pre-push   }
+          - { id: tarpaulin,        stage: pre-push   }
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ matrix.hook.id }}-${{ hashFiles('.pre-commit-hooks.yaml') }}
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ matrix.hook.id }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ matrix.hook.id }}-
+
+      - name: Run hook with pre-commit try-repo
+        run: |
+          pre-commit try-repo . ${{ matrix.hook.id }} \
+            --hook-stage ${{ matrix.hook.stage }} \
+            --all-files \
+            --verbose
