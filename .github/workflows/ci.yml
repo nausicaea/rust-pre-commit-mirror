@@ -1,13 +1,22 @@
-name: Test Pre-Commit Hooks
+name: CI
 
 on:
   push:
+    branches: [main]
+    tags: ["v*"]
   pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
 
 jobs:
   test-hooks:
     name: Test ${{ matrix.hook.id }} (${{ matrix.hook.stage }})
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -22,7 +31,7 @@ jobs:
           - { id: mutants,          stage: pre-push   }
           - { id: audit,            stage: pre-push   }
           - { id: tarpaulin,        stage: pre-push   }
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -32,19 +41,17 @@ jobs:
         with:
           components: rustfmt, clippy
 
-      - name: Set up Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      - name: Install prek
+        uses: j178/prek-action@5337cb91e0fa35a7ff31b9ca345126d8bbbcdf16 # v2.0.6
         with:
-          python-version: "3.15.2"
+          install-only: true
+          cache: false
 
-      - name: Install pre-commit
-        run: pip install pre-commit
-
-      - name: Cache pre-commit environments
+      - name: Cache prek environments
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/.cache/pre-commit
-          key: pre-commit-${{ matrix.hook.id }}-${{ hashFiles('.pre-commit-hooks.yaml') }}
+          path: ~/.cache/prek
+          key: prek-${{ matrix.hook.id }}-${{ hashFiles('.pre-commit-hooks.yaml') }}
 
       - name: Cache Cargo registry
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -57,9 +64,9 @@ jobs:
           restore-keys: |
             cargo-${{ matrix.hook.id }}-
 
-      - name: Run hook with pre-commit try-repo
+      - name: Run hook with prek try-repo
         run: |
-          pre-commit try-repo . ${{ matrix.hook.id }} \
+          prek try-repo . ${{ matrix.hook.id }} \
             --hook-stage ${{ matrix.hook.stage }} \
             --all-files \
             --verbose
